@@ -1,0 +1,80 @@
+# Instructions for Static Website Deployment
+
+## 1. Create a Static Website
+
+Create a folder named `static-site` with an `index.html` file:
+
+static-site/index.html
+----------------------
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My Static Website</title>
+</head>
+<body>
+    <h1>Welcome to My Static Website!</h1>
+</body>
+</html>
+
+## 2. Deploy to Azure Static Web Apps using GitHub Actions
+
+Add this workflow to `.github/workflows/azure-static-web-apps.yml` in your repo:
+
+.github/workflows/azure-static-web-apps.yml
+-------------------------------------------
+name: Azure Static Web Apps CI/CD
+
+on:
+    push:
+        branches:
+            - main
+
+jobs:
+    build_and_deploy:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v3
+            - name: Build and Deploy
+                uses: Azure/static-web-apps-deploy@v1
+                with:
+                    azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}
+                    repo_token: ${{ secrets.GITHUB_TOKEN }}
+                    action: "upload"
+                    app_location: "static-site"
+                    output_location: ""
+
+## 3. Deploy to Apache Server using Jenkins
+
+- Create a Jenkins pipeline job.
+- Use a GitHub webhook to trigger the job on push events.
+
+Jenkinsfile
+-----------
+pipeline {
+        agent any
+        stages {
+                stage('Checkout') {
+                        steps {
+                                git 'https://github.com/yourusername/your-repo.git'
+                        }
+                }
+                stage('Deploy to Apache') {
+                        steps {
+                                sh '''
+                                rsync -av --delete static-site/ /var/www/html/
+                                '''
+                        }
+                }
+        }
+}
+
+## 4. GitHub Hooks
+
+- Go to your GitHub repo > Settings > Webhooks.
+- Add a webhook pointing to your Jenkins server's `/github-webhook/` endpoint.
+- Set it to trigger on `push` events.
+
+# Summary
+
+- Website is deployed to Azure Static Web Apps via GitHub Actions on every push to `main`.
+- Website is deployed to Apache server via Jenkins pipeline triggered by GitHub webhook.

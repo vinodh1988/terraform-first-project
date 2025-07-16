@@ -1,0 +1,10 @@
+**Hands-on Exercise Problem Statement:**
+
+Create an 
+Azure Resource Group, 
+Virtual Network (VNET), Subnet,
+ Network Interface, 
+ and a Windows Virtual Machine using Terraform.
+  The exercise should demonstrate how to provision 
+  these resources in Azure, configure networking, 
+  and set up a VM with administrative credentials.
